@@ -26,7 +26,7 @@
         @elseif (Auth::user() -> type == 'teacher')
         <div class='panel-body'>
             <form class='form-inline'>
-                <a class='btn btn-info btn-inline' href='#'>See submissions</a>
+                <a class='btn btn-info btn-inline' href='{{route('seeSubmissions', ['exerciseId' => $exercise -> id])}}'>See submissions</a>
                 <a class='btn btn-danger btn-inline' href='{{route('deleteExercise', ['id' => $exercise -> id])}}' onclick="return confirm('Are you sure you want to delete this exercise?')">Delete exercise</a>
             </form>
         </div>

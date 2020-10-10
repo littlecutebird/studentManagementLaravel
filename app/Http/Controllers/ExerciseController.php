@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Exercise;
 use App\Models\Submitexercise;
+use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 
 class ExerciseController extends Controller
@@ -40,7 +41,7 @@ class ExerciseController extends Controller
                 $fileName = pathinfo($request -> file('fileToUpload') -> getClientOriginalName() , PATHINFO_FILENAME);
                 $fileExtension = $request -> file('fileToUpload') -> getClientOriginalExtension();
                 $fileNameToStore = $fileName.'_'.time().'.'.$fileExtension;
-                $filePath = $request -> file('fileToUpload') -> storeAs('public/exercises', $fileNameToStore);
+                $filePath = $request -> file('fileToUpload') -> storeAs('uploads/exercises', $fileNameToStore);
             }
 
             $exercise = new Exercise();
@@ -48,7 +49,7 @@ class ExerciseController extends Controller
             $exercise -> title = $request -> title;
             $exercise -> description = $request -> description;
             $exercise -> deadline = $request -> deadline;
-            $exercise -> file_path = 'exercises/'. $fileNameToStore;
+            $exercise -> file_path = 'uploads/exercises/'. $fileNameToStore;
             $exercise -> save();
 
             return redirect() -> back() -> with('addSuccess', true);
@@ -70,5 +71,42 @@ class ExerciseController extends Controller
     public function submitExercise(Request $request, $id) {
         $exercise = Exercise::findOrFail($id);
         return view('exercises.submitExercise', compact('exercise'));
+    }
+    public function insertSubmitexercise(Request $request, $id) {
+        if ($request -> has('submit')) {
+            $request -> validate([
+                // Max file size: 10MB
+                'fileToUpload' => ['required', 'file', 'max:10240'],
+            ]);
+                
+            if ($request -> hasFile('fileToUpload')) {
+                $fileName = pathinfo($request -> file('fileToUpload') -> getClientOriginalName() , PATHINFO_FILENAME);
+                $fileExtension = $request -> file('fileToUpload') -> getClientOriginalExtension();
+                $fileNameToStore = $fileName.'_'.time().'.'.$fileExtension;
+                $filePath = $request -> file('fileToUpload') -> storeAs('uploads/submits', $fileNameToStore);
+            }
+
+            $submitExercise = new Submitexercise();
+            $submitExercise -> exercise_id = $id;
+            $submitExercise -> student_id = Auth::user() -> id;
+            $submitExercise -> submit_time = now();
+            $submitExercise -> file_path = 'uploads/submits/'. $fileNameToStore;
+            $submitExercise -> save();
+
+            return redirect() -> back() -> with('addSuccess', true);
+        }
+    }
+
+    public function seeSubmissions(Request $request, $exerciseId) {
+        $exercise = Exercise::findOrFail($exerciseId);
+        
+        //Authorization
+        if ($exercise -> teacher_id != Auth::user() -> id) {
+            return redirect() -> route('listExercise');
+        }
+        else {
+            $submissions = Submitexercise::where('exercise_id', $exerciseId) -> get();
+            return view('exercises.seeSubmissions', compact('exercise', 'submissions'));
+        }
     }
 }

@@ -12,13 +12,16 @@
                 <div class="panel-body"><i>{{$exercise -> description }}</i></div>
                 <div class='panel-body'>Last modified time: {{$exercise -> updated_at }}</div>
                 <div class='panel-body'>Deadline: {{ $exercise -> deadline }}</div>
-                <div class='panel-body'><a class='btn btn-warning' href='{{asset('storage/'. $exercise -> file_path)}}'>Statement</a></div>
+                <div class='panel-body'><a class='btn btn-warning' href='{{asset($exercise -> file_path)}}'>Statement</a></div>
             </div>
         </div>
         <div class='col-lg-6'>
             <br>
-            <form action='' method='post' enctype='multipart/form-data'>
+            <form action='{{route('submitExercise', ['id' => $exercise -> id])}}' method='post' enctype='multipart/form-data'>
             @csrf
+                @if (session() -> has('addSuccess'))
+                <div class='alert alert-success'>Submit homework success!</div>
+                @endif
                 <div class='form-group'>
                     <label for='fileToUpload'>Select file to upload:</label>
                     <input class='form-control' type="file" name="fileToUpload" id="fileToUpload" required>

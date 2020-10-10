@@ -55,11 +55,13 @@ Route::middleware('auth')->group(function () {
         }) -> name('addExercise');
         Route::post('/exercises/add', 'ExerciseController@insertExercise');
         Route::get('/exercises/delete/{id}', 'ExerciseController@deleteExercise') -> name('deleteExercise');
+        Route::get('/exercises/grade/{exerciseId}', 'ExerciseController@seeSubmissions') -> name('seeSubmissions');
     });
 
     // features for student only 
     Route::middleware('isStudent') -> group(function() {
         Route::get('/exercises/submit/{id}', 'ExerciseController@submitExercise') -> name('submitExercise');
+        Route::post('/exercises/submit/{id}', 'ExerciseController@insertSubmitexercise');
     });
 
 });
