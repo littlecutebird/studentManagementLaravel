@@ -30,8 +30,8 @@ class ExerciseController extends Controller
     public function insertExercise(Request $request) {
         if ($request -> has('addNew')) {
             $request -> validate([
-                'title' => ['required'],
-                'description' => ['required'],
+                'title' => ['required', 'string'],
+                'description' => ['required', 'string'],
                 'deadline' => ['required', 'date'],
                 // Max file size: 10MB
                 'fileToUpload' => ['required', 'file', 'max:10240'],

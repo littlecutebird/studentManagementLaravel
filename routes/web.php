@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/users/editMsg/{id}/{receiveId}', 'UserController@editMsg') -> name('editMsg');
     Route::post('/users/editMsg/{id}/{receiveId}', 'UserController@updateMsg');
     Route::get('/exercises', 'ExerciseController@listExercise') -> name('listExercise');
+    Route::get('/challenges', 'ChallengeController@listChallenge') -> name('listChallenge');
 
     // features for teacher only
     Route::middleware('isTeacher') -> group(function() {
@@ -56,12 +57,19 @@ Route::middleware('auth')->group(function () {
         Route::post('/exercises/add', 'ExerciseController@insertExercise');
         Route::get('/exercises/delete/{id}', 'ExerciseController@deleteExercise') -> name('deleteExercise');
         Route::get('/exercises/grade/{exerciseId}', 'ExerciseController@seeSubmissions') -> name('seeSubmissions');
+        Route::get('/challenges/delete/{challengeId}', 'ChallengeController@deleteChallenge') -> name('deleteChallenge');
+        Route::get('/challenges/add', function() {
+            return view('challenges.addChallenge');
+        }) -> name('addChallenge');
+        Route::post('/challenges/add', 'ChallengeController@insertChallenge');
     });
 
     // features for student only 
     Route::middleware('isStudent') -> group(function() {
         Route::get('/exercises/submit/{id}', 'ExerciseController@submitExercise') -> name('submitExercise');
         Route::post('/exercises/submit/{id}', 'ExerciseController@insertSubmitexercise');
+        Route::get('/challenges/submit/{challengeId}', 'ChallengeController@submitChallenge') -> name('submitChallenge');
+        Route::post('/challenges/submit/{challengeId}', 'ChallengeController@submitAnswer');
     });
 
 });
