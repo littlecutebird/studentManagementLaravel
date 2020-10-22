@@ -30,6 +30,11 @@
                     <input type="submit" class="btn btn-primary" value="Login">
                 </div>
             </form>
+            <div class="form-group">
+                <div class="col-md-8 col-md-offset-4">
+                  <a href="{{route('facebookRedirect')}}" class="btn btn-primary">Login with Facebook</a>
+                </div>
+            </div>
         </div>    
     </body>
 </html>

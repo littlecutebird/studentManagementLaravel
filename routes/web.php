@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\Route;
 
 // Show Register Page & Login Page. If logged in redirect to home else go to login
 Route::get('/login', 'LoginController@show')-> name('login') ->middleware('guest');
-
+Route::get('/redirect', 'SocialAuthFacebookController@redirect') -> name('facebookRedirect');
+Route::get('/callback', 'SocialAuthFacebookController@callback') -> name('facebookCallback');
 
 // Register & Login User
 Route::post('/login', 'LoginController@authenticate');
