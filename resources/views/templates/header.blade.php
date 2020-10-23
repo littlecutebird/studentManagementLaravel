@@ -10,6 +10,7 @@
             <li @if (Request::is('users*')) class="active" @endif><a href="{{route('listUser')}}">List user</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
+            <li><a href="{{route('2fa_setting')}}">2FA Setting</a></li>
             <li @if (Request::is('profile*')) class="active" @endif><a href="{{route('profile')}}"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
             <li><a href="{{route('logout')}}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
         </ul>

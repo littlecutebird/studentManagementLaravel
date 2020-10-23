@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: Oct 22, 2020 at 05:46 AM
+-- Generation Time: Oct 23, 2020 at 06:12 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.9
 
@@ -123,7 +123,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (5, '2020_10_09_102159_create_messages_table', 2),
 (7, '2020_10_09_153734_create_exercises_table', 3),
 (8, '2020_10_09_160247_create_submitexercises_table', 3),
-(11, '2020_10_10_160414_create_challenges_table', 4);
+(11, '2020_10_10_160414_create_challenges_table', 4),
+(12, '2020_10_23_043258_add_secret_code_to_users', 5);
 
 -- --------------------------------------------------------
 
@@ -151,6 +152,8 @@ CREATE TABLE `social_facebook_accounts` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+
+-- --------------------------------------------------------
 
 --
 -- Table structure for table `submitexercises`
@@ -186,6 +189,7 @@ CREATE TABLE `users` (
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `secret_code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `type` enum('student','teacher') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'student',
@@ -197,9 +201,9 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `fullname`, `username`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`, `type`, `email`, `phonenumber`) VALUES
-(2, 'Thầy giáo Long', 'teacher', NULL, '$2y$10$UUogntOQ/ZT8UaqY3sXNHetxs5vmyz5b1Ox1dfVdIvswsckEHbsBu', NULL, NULL, '2020-10-11 09:45:39', 'teacher', 'teacher@email', '0909009009'),
-(3, 'Học sinh', 'student', NULL, '$2y$10$mZnB74iV.dR.s5SrWzdE9ehQheYO5xQLlExME33Oj6FbOFde1N4By', NULL, '2020-10-06 03:26:38', '2020-10-11 09:48:01', 'student', 'student@mail', '123456789');
+INSERT INTO `users` (`id`, `fullname`, `username`, `email_verified_at`, `password`, `remember_token`, `secret_code`, `created_at`, `updated_at`, `type`, `email`, `phonenumber`) VALUES
+(2, 'Thầy giáo Long', 'teacher', NULL, '$2y$10$UUogntOQ/ZT8UaqY3sXNHetxs5vmyz5b1Ox1dfVdIvswsckEHbsBu', NULL, NULL, NULL, '2020-10-11 09:45:39', 'teacher', 'teacher@email', '0909009009'),
+(3, 'Học sinh', 'student', NULL, '$2y$10$mZnB74iV.dR.s5SrWzdE9ehQheYO5xQLlExME33Oj6FbOFde1N4By', NULL, NULL, '2020-10-06 03:26:38', '2020-10-11 09:48:01', 'student', 'student@mail', '123456789');
 
 --
 -- Indexes for dumped tables
@@ -291,7 +295,7 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `submitexercises`
@@ -303,7 +307,7 @@ ALTER TABLE `submitexercises`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Constraints for dumped tables

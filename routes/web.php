@@ -15,20 +15,39 @@ use Illuminate\Support\Facades\Route;
 
 // Show Register Page & Login Page. If logged in redirect to home else go to login
 Route::get('/login', 'LoginController@show')-> name('login') ->middleware('guest');
+
+// Facebook Login
 Route::get('/redirect', 'SocialAuthFacebookController@redirect') -> name('facebookRedirect');
 Route::get('/callback', 'SocialAuthFacebookController@callback') -> name('facebookCallback');
+
 
 // Register & Login User
 Route::post('/login', 'LoginController@authenticate');
 
+// Verify code with 2FA after login
+Route::group(["middleware" => ["auth"]], function() {
+    Route::group(["prefix" => "two_face_enable"], function() {
+        Route::get("/", "VerifyTwoFaceController@index")->name("two_face.index");
+        Route::post("/verify", "VerifyTwoFaceController@verify")->name("two_face.verify");
+    });
+
+    // Log out if user don't want to type code now
+    Route::get('/logout', 'LoginController@logout') -> name('logout');
+});
 
 // Protected Routes - allows only logged in users
-Route::middleware('auth')->group(function () {
+Route::group(["middleware" => ["auth", "2fa"]], function () {
+
+    //Enable 2FA with Google Authenticator
+    Route::group(["prefix" => "two_face_auths"], function() {
+        Route::get("/", "TwoFaceAuthsController@index")->name("2fa_setting");
+        Route::post("/enable", "TwoFaceAuthsController@enable")->name("enable_2fa_setting");
+    });
+
     Route::get('/', function() {
         return view('index');
     })->name('index');
 
-    Route::get('/logout', 'LoginController@logout') -> name('logout');
     Route::get('/users', 'UserController@listUser') -> name('listUser');
     Route::get('/profile', 'UserController@getProfile') -> name('profile');
     Route::get('/profile/edit', 'UserController@editProfile') -> name('editProfile');
